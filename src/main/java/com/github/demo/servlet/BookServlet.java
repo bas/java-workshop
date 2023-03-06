@@ -19,9 +19,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
-import com.launchdarkly.sdk.*;
-import com.launchdarkly.sdk.server.*;
-
 public class BookServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -67,25 +64,6 @@ public class BookServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
 
         try {
-            LDClient client = (LDClient) getServletContext().getAttribute("ldClient");
-
-            LDContext context = LDContext.builder("context-key-123abc")
-                    .name("Sandy")
-                    .set("isPremium", true)
-                    .set("categories", LDValue.buildArray().add("Fantasy").add("Programming").add("Travel").build())
-                    .build();
-
-            boolean showBanner = client.boolVariation("show-banner", context, false);
-
-            String configureBanner = client.stringVariation("configure-banner", context,
-                    "Get 3 books for the price of 2");
-
-            boolean showRatings = client.boolVariation("show-ratings", context, false);
-
-            ctx.setVariable("showBanner", showBanner);
-            ctx.setVariable("configureBanner", configureBanner);
-            ctx.setVariable("showRatings", showRatings);
-
             List<Book> books = bookService.getBooks();
             ctx.setVariable("books", books);
             engine.process("books", ctx, resp.getWriter());

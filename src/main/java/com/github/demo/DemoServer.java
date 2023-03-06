@@ -15,8 +15,6 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.launchdarkly.sdk.server.*;
-
 public class DemoServer {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoServer.class);
@@ -52,13 +50,6 @@ public class DemoServer {
         launchDarklyProperties.load(DemoServer.class.getClassLoader().getResourceAsStream("launchdarkly.properties"));
         logger.info("LaunchDarkly key:" + launchDarklyProperties.getProperty("SERVER_SIDE_SDK"));
 
-        // initialize the client
-        String sdkKey = launchDarklyProperties.getProperty("SERVER_SIDE_SDK");
-        LDClient client = new LDClient(sdkKey);
-        ctxHandler.setAttribute("ldClient", client);
-
-        logWheneverAnyFlagChanges(client);
-
         ServletHolder staticFiles = new ServletHolder("static-home", DefaultServlet.class);
         staticFiles.setInitParameter("resourceBase", webRootUri.toString());
         staticFiles.setInitParameter("dirAllowed", "true");
@@ -90,12 +81,6 @@ public class DemoServer {
         }
         server.join();
 
-    }
-
-    private static void logWheneverAnyFlagChanges(LDClient client) {
-        client.getFlagTracker().addFlagChangeListener(event -> {
-            logger.info("Flag has changed: " + event.getKey());
-        });
     }
 
     private static void logServerStartWithUnresolvedUri(int port) {
