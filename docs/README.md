@@ -171,6 +171,16 @@ Restart the server. In LaunchDarkly you can open the [Live events page](https://
 
 To test targeting you can for example add a rule to the `configure-banner` and return the free shipping variation when `isPremium` is `true`.
 
+## Getting evaluation details
+
+The following code example shows you how you can [get evaluation details](https://docs.launchdarkly.com/sdk/features/evaluation-reasons#java):
+
+```java
+EvaluationDetail<Boolean> detail = client.boolVariationDetail("show-banner", context, false);
+EvaluationReason reason = detail.getReason();
+logger.info(reason.toString());
+```
+
 ## Resources
 
 - [LaunchDarkly docs](https://docs.launchdarkly.com/home?q=watch%20events)
